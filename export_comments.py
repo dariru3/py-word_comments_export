@@ -13,8 +13,9 @@ def extract_comments(docx_file):
                     for _, element in iterparse(comments_file):
                         if element.tag.endswith("comment"):
                             comment_id = element.attrib.get("{http://schemas.openxmlformats.org/wordprocessingml/2006/main}id")
+                            author_name = element.attrib.get("{http://schemas.openxmlformats.org/wordprocessingml/2006/main}author")
                             comment_text = "".join(element.itertext()).strip()
-                            comments.append(f"Comment ID: {comment_id}, Comment Text: {comment_text}")
+                            comments.append((comment_id, author_name, comment_text))
                             element.clear()
     return comments
 
@@ -24,5 +25,5 @@ output_file = "output_comments.txt"
 comments = extract_comments(docx_file)
 
 with open(output_file, 'w', encoding='utf-8') as f:
-    for comment in comments:
-        f.write(comment + "\n")
+    for comment_id, author_name, comment_text in comments:
+        f.write(f"Comment ID: {comment_id}, Author: {author_name}, Comment Text: {comment_text}\n")
