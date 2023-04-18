@@ -14,12 +14,15 @@ def extract_comments(docx_file):
                         if element.tag.endswith("comment"):
                             comment_id = element.attrib.get("{http://schemas.openxmlformats.org/wordprocessingml/2006/main}id")
                             comment_text = "".join(element.itertext()).strip()
-                            comments.append((comment_id, comment_text))
+                            comments.append(f"Comment ID: {comment_id}, Comment Text: {comment_text}")
                             element.clear()
     return comments
 
 docx_file = "comments.docx"
+output_file = "output_comments.txt"
+
 comments = extract_comments(docx_file)
 
-for comment_id, comment_text in comments:
-    print(f"Comment ID: {comment_id}, Comment Text: {comment_text}")
+with open(output_file, 'w', encoding='utf-8') as f:
+    for comment in comments:
+        f.write(comment + "\n")
